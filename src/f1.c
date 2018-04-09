@@ -11,6 +11,8 @@
 #include <fcntl.h>
 #include <errno.h>
 
+//SOPE
+
 void sigint_handler(int sig){}
 
 void fileAction(char* dirName, char* name){}
