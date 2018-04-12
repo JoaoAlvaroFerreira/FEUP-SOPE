@@ -74,12 +74,26 @@ int main(){
     //     sleep(1);
     // }
 
-	char line[] = "Somebody once told me the world is gonna roll me\n";
+	// //TESTING contains
+	// char line[] = "Somebody once told me the world is gonna roll me\n";
+	// char word[] = "body";
+
+	//  if (contains(&line, &word) == 1)
+	// 	printf("%s", line);
+	// else
+	// 	printf("Not found\n");
+
+	char const* const fileName = "../testfiles/test1.txt";
+    FILE* file = fopen(fileName, "r");
+    char line[256];
 	char word[] = "body";
 
-	 if (contains(&line, &word) == 1)
-		printf("%s", line);
-	else
-		printf("Not found\n");
+    while (fgets(line, sizeof(line), file)) {
+		if (contains(&line, &word) == 1)
+			printf("%s", line);
+    }
+
+    fclose(file);
+
     exit(0);
 }
