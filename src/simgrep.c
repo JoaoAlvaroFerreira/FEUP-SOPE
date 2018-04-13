@@ -45,29 +45,52 @@ void lower_string(char *string){
    }
 }
 
-char * append(char * string1, char * string2)
-{
-    char * result = NULL;
-    asprintf(&result, "%s%s", string1, string2);
-    return result;
+char* add_spaces(char * string){
+	char * new_str ;
+	if((new_str = malloc(strlen(string)+3)) != NULL){
+		new_str[0] = '\0';   // ensures the memory is an empty string
+		strcat(new_str," ");
+		strcat(new_str,string);
+		strcat(new_str," ");
+	}
+
+	return new_str;
 }
 
-int contains(char *line, char* word, char* options) {
+char* add_endl(char * string)
+{
+	char * new_str ;
+	if((new_str = malloc(strlen(string)+3)) != NULL){
+		new_str[0] = '\0';   // ensures the memory is an empty string
+		strcat(new_str," ");
+		strcat(new_str,string);
+		strcat(new_str,"\n");
+	}
+
+	return new_str;
+}
+
+int contains(char *line, char* word, char* options, int *first_time) {
 
 	int k = 0;
-	while (options[k] != '\0') {
-		switch(options[k]) {
-			case 'i':
-				lower_string(line);
-				lower_string(word);
-				break;
-			case 'w':
-				break;
-			default:
-				break;
+	if (*first_time == 1) {
+		while (options[k] != '\0') {
+			switch(options[k]) {
+				case 'i':
+					lower_string(line);
+					lower_string(word);
+					break;
+				case 'w':
+					strcpy(word,add_spaces(word));
+					break;
+				default:
+					break;
+			}
+
+			k++;
 		}
 
-		k++;
+		*first_time = 0;
 	}
 
 	int i = 0;
@@ -121,13 +144,41 @@ int main(){
 	char fileName[50] = "../testfiles/test1.txt";
     FILE* file = fopen(fileName, "r");
     char line[256];
-	char word[15] = "boDy";
-	char options[6] = "";
+	char word[15] = "An";
+	char options[6] = "niw";
+	int ft = 1;
+	int k = 0;
+	int line_number = 0;
+	int hit_count = 0;
 
-    while (fgets(line, sizeof(line), file)) {
-		if (contains(line, word, options) == 1)
-			printf("%s", line);
-    }
+	while (options[k] != '\0') {
+		switch(options[k]) {
+			case 'n':
+				while (fgets(line, sizeof(line), file)) {
+					line_number++;
+					if (contains(line, word, options, &ft) == 1)
+						printf("%d:%s", line_number, line);
+				}
+				line_number=0;
+				break;
+			case 'c':
+				while (fgets(line, sizeof(line), file)) {
+					if (contains(line, word, options, &ft) == 1)
+						hit_count++;
+				}
+				printf("%d\n", hit_count);
+				hit_count = 0;
+				break;
+			default:
+			    while (fgets(line, sizeof(line), file)) {
+					if (contains(line, word, options, &ft) == 1)
+						printf("%s", line);
+    			}
+				break;
+		}
+
+		k++;
+	}
 
     fclose(file);
 
