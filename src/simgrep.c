@@ -167,67 +167,15 @@ void convertOptions(char* args, char* options) {
 	strcpy(options,opt);
 }
 
-int main(int argc, char *argv[]){
+void readfile(char* fileName, char* word, char* options) {
 
-    //Handling signal
-	struct sigaction action;
-	action.sa_handler = sigint_handler;
-	sigemptyset(&action.sa_mask);
-	action.sa_flags = 0;
-	signal(SIGINT, sigint_handler);
-
-	// //TESTING contains
-	// char line[] = "Somebody once told me the world is gonna roll me\n";
-	// char word[] = "body";
-
-	//  if (contains(&line, &word) == 1)
-	// 	printf("%s", line);
-	// else
-	// 	printf("Not found\n");
-
-
-	char fileName[50] = "../testfiles/test1.txt";
-    FILE* file = fopen(fileName, "r");
-    char line[256];
-	char word[15] = "An";
-	char options_args[15];
-	char options[15];
-	int ft = 1;
+	char line[256];
 	int k = 0;
-	int i = 0;
-	int line_number = 0;
+	int ft = 1;
 	int hit_count = 0;
 
-	switch(argc) {
-		case 1:
-			printf("Must specify pattern and file");
-			return 0;
-		case 2:
-			printf("Must specify pattern and file");
-			return 0;
-		case 3:
-			strcpy(word, argv[1]);
-			strcpy(fileName, argv[2]);
-			break;
-		default:
-			i = argc-1;
-			while(i != 0) {
-				if (i == (argc - 1)) {
-					strcpy(fileName, argv[i]);
-				}
-				else if (i == (argc - 2)) {
-					strcpy(word, argv[i]);
-				}
-				else {
-					strcpy(options_args, appendString(options_args, argv[i]));
-				}
-				i--;	
-			}
-			break;	
-	}
-
-	convertOptions(options_args, options);
-
+	FILE* file = fopen(fileName, "r");
+	int line_number = 0;
 
 	while (options[k] != '\0') {
 		switch(options[k]) {
@@ -259,6 +207,53 @@ int main(int argc, char *argv[]){
 	}
 
     fclose(file);
+}
+
+int main(int argc, char *argv[]){
+
+    //Handling signal
+	struct sigaction action;
+	action.sa_handler = sigint_handler;
+	sigemptyset(&action.sa_mask);
+	action.sa_flags = 0;
+	signal(SIGINT, sigint_handler);
+
+	char fileName[50] = "testfiles/test1.txt";
+	char word[15] = "An";
+	char options_args[15];
+	char options[15];
+	int i = 0;
+
+	switch(argc) {
+		case 1:
+			printf("Must specify pattern and file");
+			return 0;
+		case 2:
+			printf("Must specify pattern and file");
+			return 0;
+		case 3:
+			strcpy(word, argv[1]);
+			strcpy(fileName, argv[2]);
+			break;
+		default:
+			i = argc-1;
+			while(i != 0) {
+				if (i == (argc - 1)) {
+					strcpy(fileName, argv[i]);
+				}
+				else if (i == (argc - 2)) {
+					strcpy(word, argv[i]);
+				}
+				else {
+					strcpy(options_args, appendString(options_args, argv[i]));
+				}
+				i--;	
+			}
+			break;	
+	}
+
+	convertOptions(options_args, options);
+	readfile(fileName, word, options);
 
     exit(0);
 }
